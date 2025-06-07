@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\LeaveRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -15,6 +14,20 @@ class DashboardController extends Controller
 
     public function admin()
     {
-        return view('admin.dashboard');
+        $leaveCountsByMonth = LeaveRequest::selectRaw('MONTH(start_date) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->pluck('count', 'month');
+
+        $leaveCountsByType = LeaveRequest::select('leave_type', DB::raw('count(*) as total'))
+            ->groupBy('leave_type')
+            ->pluck('total', 'leave_type');
+
+        $totalLeaves = LeaveRequest::count();
+
+        return view('admin.dashboard', compact(
+            'leaveCountsByMonth',
+            'leaveCountsByType',
+            'totalLeaves'
+        ));
     }
 }
