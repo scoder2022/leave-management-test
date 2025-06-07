@@ -19,6 +19,7 @@ Auth::routes();
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin-login-page');
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login');
 
+
 // Authenticated dashboards
 Route::middleware(['auth'])->group(function () {
     Route::get('/employee/dashboard', [DashboardController::class, 'employee'])->middleware('role:employee')->name('employee.dashboard');
@@ -36,10 +37,13 @@ Route::middleware(['auth', 'role:employee'])
     ->as('employee.')
     ->group(function () {
         Route::resource('leave-requests', EmployeeLeaveRequestController::class);
-    });
+});
 
 // Laravel default home
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::post('admin/leave-requests/{id}/status', [AdminLeaveRequestController::class, 'updateStatus'])
     ->name('admin.leave-requests.status');
+
+
+

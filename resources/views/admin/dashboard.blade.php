@@ -2,6 +2,6 @@
 
 @section('content')
 <div class="container">
-    <h2>Welcome Admin</h2>
+    <h3>Welcome Admin Leave Stats</h3>
 </div>
 @endsection

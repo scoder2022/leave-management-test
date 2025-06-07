@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\LeaveStatusChanged;
 use App\Models\LeaveRequest;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class LeaveRequestController extends Controller
 {
@@ -14,7 +16,14 @@ class LeaveRequestController extends Controller
      */
     public function index(Request $request)
     {
-        $leaveRequests = LeaveRequest::with('user')->latest()->paginate(10);
+        $query = LeaveRequest::with('user')->latest();
+
+        // Optional filter by status
+        if ($request->has('status') && in_array($request->status, ['pending', 'approved', 'rejected'])) {
+            $query->where('status', $request->status);
+        }
+
+        $leaveRequests = $query->paginate(10);
 
         return view('admin.leave_requests.index', compact('leaveRequests'));
     }
@@ -24,9 +33,9 @@ class LeaveRequestController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-{
-    return view('admin.leave_requests.create');
-}
+    {
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -108,11 +117,10 @@ class LeaveRequestController extends Controller
             'admin_comment' => 'nullable|string',
         ]);
 
-        $leaveRequest = LeaveRequest::findOrFail($id);
+        $leaveRequest = LeaveRequest::with('user')->findOrFail($id);
         $leaveRequest->update($validated);
 
         return redirect()->route('admin.leave-requests.index')->with('success', 'Leave status updated.');
     }
-
 
 }

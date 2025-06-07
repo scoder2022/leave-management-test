@@ -10,7 +10,14 @@
 <div class="container">
     <h2>All Leave Requests</h2>
 
-    
+    <form method="GET" class="mb-3">
+        <select name="status" onchange="this.form.submit()" class="form-select w-auto d-inline">
+            <option value="">Sort By All</option>
+            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+        </select>
+    </form>
 
     <table class="table table-striped table-bordered table-hover">
         <thead>
@@ -45,7 +52,6 @@
                     </span>
                 </td>
                 <td>
-
                     <div class="action">
                         <div class="d-flex flex-column gap-2">
                             <form method="POST" action="{{ route('admin.leave-requests.status', $leave_request->id) }}"

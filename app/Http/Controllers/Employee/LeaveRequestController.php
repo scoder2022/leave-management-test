@@ -12,9 +12,19 @@ class LeaveRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $leaveRequests = LeaveRequest::where('user_id', auth()->id())->latest()->paginate(10);
+        $status = $request->status;
+        $leaveRequests = LeaveRequest::when($status !== 'all',
+            function ($query) use ($status) {
+                if (in_array($status, ['pending', 'approved', 'rejected'])) {
+                    $query->where('status', $status);
+                }
+            }
+        )
+        ->where('user_id', auth()->id())
+        ->latest()
+        ->paginate(10);
         return view('employee.leave_requests.index', compact('leaveRequests'));
     }
 

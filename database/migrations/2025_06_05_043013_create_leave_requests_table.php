@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('leave_type')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->text('reason')->nullable();
+            $table->string('leave_type');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->text('reason');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('admin_comment')->nullable();
             $table->timestamps();
