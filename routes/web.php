@@ -41,5 +41,6 @@ Route::middleware('auth')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'admin'])->name('dashboard');
         Route::resource('leave-requests', AdminLeaveRequestController::class);
         Route::post('leave-requests/{id}/status', [AdminLeaveRequestController::class, 'updateStatus'])->name('leave-requests.status');
+        Route::get('leave-requests/export/csv', [AdminLeaveRequestController::class, 'exportCsv'])->name('leave-requests.export.csv');
     });
 });

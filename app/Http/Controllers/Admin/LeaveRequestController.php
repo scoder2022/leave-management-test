@@ -124,4 +124,40 @@ class LeaveRequestController extends Controller
         return redirect()->route('admin.leave-requests.index')->with('success', 'Leave status updated.');
     }
 
+
+    public function exportCsv()
+    {
+        $fileName = 'leave_requests_' . now()->format('Ymd_His') . '.csv';
+        $leaveRequests = LeaveRequest::with('user')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$fileName}",
+        ];
+
+        $columns = ['ID', 'Employee', 'Type', 'Start Date', 'End Date', 'Status', 'Reason', 'Comment'];
+
+        $callback = function () use ($leaveRequests, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($leaveRequests as $leave) {
+                fputcsv($file, [
+                    $leave->id,
+                    $leave->user->name ?? 'N/A',
+                    $leave->leave_type,
+                    $leave->start_date,
+                    $leave->end_date,
+                    $leave->status,
+                    $leave->reason,
+                    $leave->admin_comment,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 }

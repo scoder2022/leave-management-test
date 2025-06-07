@@ -20,6 +20,11 @@
     </form>
 
     <table class="table table-striped table-bordered table-hover">
+        
+        <a href="{{ route('admin.leave-requests.export.csv') }}" class="btn btn-outline-primary mb-3">
+            Export Leave Requests (CSV)
+        </a>
+
         <thead>
             <tr>
                 <th>S.N</th>
