@@ -120,6 +120,7 @@ class LeaveRequestController extends Controller
         $leaveRequest = LeaveRequest::with('user')->findOrFail($id);
         $leaveRequest->update($validated);
 
+        Mail::to($leaveRequest->user->email)->send(new LeaveStatusChanged($leaveRequest));
         return redirect()->route('admin.leave-requests.index')->with('success', 'Leave status updated.');
     }
 
