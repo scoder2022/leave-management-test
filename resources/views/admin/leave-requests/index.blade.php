@@ -9,22 +9,20 @@
 @section('content')
 <div class="container">
     <h2>All Leave Requests</h2>
+    <a href="{{ route('admin.leave-requests.export.csv') }}" class="btn btn-outline-primary mb-3"
+         style="float: right">Export Leave Requests (CSV)</a>
 
     <form method="GET" class="mb-3">
-        <select name="status" onchange="this.form.submit()" class="form-select w-auto d-inline">
-            <option value="">Sort By All</option>
-            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+        <select name="status" onchange="this.form.submit()" class="form-control w-auto">
+            <option disabled selected>Select Sort By -</option>
+            <option value="all" @selected(request()->get('status') === 'all')>Sort By All</option>
+            <option value="pending" @selected(request()->get('status') === 'pending')>Pending</option>
+            <option value="approved" @selected(request()->get('status') === 'approved')>Approved</option>
+            <option value="rejected" @selected(request()->get('status') === 'rejected')>Rejected</option>
         </select>
     </form>
 
     <table class="table table-striped table-bordered table-hover">
-        
-        <a href="{{ route('admin.leave-requests.export.csv') }}" class="btn btn-outline-primary mb-3">
-            Export Leave Requests (CSV)
-        </a>
-
         <thead>
             <tr>
                 <th>S.N</th>
