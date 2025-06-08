@@ -13,9 +13,9 @@
          style="float: right">Export Leave Requests (CSV)</a>
 
     <form method="GET" class="mb-3">
-        <select name="status" onchange="this.form.submit()" class="form-control w-auto">
-            <option disabled selected>Select Sort By -</option>
-            <option value="all" @selected(request()->get('status') === 'all')>Sort By All</option>
+       <select name="status" onchange="this.form.submit()" class="form-control w-auto">
+            <option disabled selected>Select Filter By -</option>
+            <option value="all" @selected(request()->get('status') === 'all')>Filter By All</option>
             <option value="pending" @selected(request()->get('status') === 'pending')>Pending</option>
             <option value="approved" @selected(request()->get('status') === 'approved')>Approved</option>
             <option value="rejected" @selected(request()->get('status') === 'rejected')>Rejected</option>
@@ -35,7 +35,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($leaveRequests as $leave_request)
+            @forelse($leaveRequests as $leave_request)
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $leave_request->user->name }}</td>
@@ -86,7 +86,11 @@
                     </div>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="7" style="text-align: center;color:red;font-weight:bold">No Data Found</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

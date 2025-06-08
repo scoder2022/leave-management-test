@@ -9,8 +9,7 @@ class LeaveRequestService
 {
     public function getUserLeaveRequests($userId, ?string $status = null)
     {
-        return LeaveRequest::when(
-            $status && $status !== 'all',
+        return LeaveRequest::when($status && $status !== 'all',
             function ($query) use ($status) {
                 if (in_array($status, ['pending', 'approved', 'rejected'])) {
                     $query->where('status', $status);
@@ -47,7 +46,7 @@ class LeaveRequestService
         $leaveRequest->delete();
     }
 
-    
+
     public function updateStatus($id, array $data)
     {
         $leaveRequest = LeaveRequest::findOrFail($id);
