@@ -3,15 +3,14 @@
 @section('content')
 <div class="container">
    <h2 class="d-flex justify-content-between align-items-center">
-    Edit Leave Request
-    <span class="badge
-        @if($leaveRequest->status === 'approved') bg-success
-        @elseif($leaveRequest->status === 'rejected') bg-danger
-        @else bg-primary
-        @endif">
-        {{ ucfirst($leaveRequest->status) }}
-    </span>
-</h2>
+        Edit Leave Request
+        <span class="badge
+            @if($leaveRequest->status === 'approved') bg-success
+            @elseif($leaveRequest->status === 'rejected') bg-danger
+            @else bg-primary
+            @endif">{{ ucfirst($leaveRequest->status) }}
+        </span>
+    </h2>
 
 
     <form method="POST" action="{{ route('employee.leave-requests.update', $leaveRequest->id) }}">

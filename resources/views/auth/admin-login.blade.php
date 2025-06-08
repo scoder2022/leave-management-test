@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Login</title>
+    <title>Admin Login</title>
     <link href="{{ asset('design/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('design/plugins/toastr/toastr.css') }}">
 </head>
@@ -12,7 +12,7 @@
 <body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
     <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
-        <h3 class="text-center mb-4">Employee Login</h3>
+        <h3 class="text-center mb-4">Admin Login</h3>
         <form method="POST" action="{{ route('admin.login') }}">
             @csrf
 

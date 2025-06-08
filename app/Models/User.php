@@ -2,32 +2,34 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * Only safe fields are listed here to prevent mass-assignment vulnerabilities.
+     *
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'status'
+        'status',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for arrays and JSON.
      *
-     * @var list<string>
+     * These are never exposed in API responses.
+     *
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -35,7 +37,9 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast to native types.
+     *
+     * Laravel will automatically hash the password when set.
      *
      * @return array<string, string>
      */
@@ -46,4 +50,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected $guarded = ['role'];
 }

@@ -10,13 +10,12 @@
             <!-- Status Badge -->
             <div class="mb-3">
                 <strong>Status:</strong>
-               <span class="font-weight-bold
-                            @if($leaveRequest->status === 'approved') text-success
-                            @elseif($leaveRequest->status === 'rejected') text-danger
-                            @else text-primary
-                            @endif">
-                        {{ ucfirst($leaveRequest->status) }}
-                    </span>
+                <span class="font-weight-bold
+                    @if($leaveRequest->status === 'approved') text-success
+                    @elseif($leaveRequest->status === 'rejected') text-danger
+                    @else text-primary
+                    @endif"> {{ ucfirst($leaveRequest->status) }}
+                </span>
             </div>
 
             <div class="mb-3">
@@ -47,10 +46,11 @@
                 </select>
 
                     <strong>Admin Comment:</strong>
-
                     <textarea name="admin_comment" class="form-control mt-2" rows="3"
                     placeholder="Add or update a comment...">{{ old('admin_comment', $leaveRequest->admin_comment) }}</textarea>
+
                     <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
+
                 </form>
             </div>
 

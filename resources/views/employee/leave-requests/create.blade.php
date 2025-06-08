@@ -6,7 +6,6 @@
 
     <form method="POST" action="{{ route('employee.leave-requests.store') }}">
         @csrf
-
         <!-- Leave Type Dropdown -->
         <label for="leave_type">Leave Type</label>
         <select name="leave_type" id="leave_type" class="form-control" required>
@@ -44,7 +43,9 @@
         </div>
 
         <button class="btn btn-success mt-2">Submit</button>
+
     </form>
+
 </div>
 @endsection
 
