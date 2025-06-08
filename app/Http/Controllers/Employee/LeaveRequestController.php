@@ -3,121 +3,82 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Employee\StoreLeaveRequest;
+use App\Http\Requests\Employee\UpdateLeaveRequest;
 use App\Models\LeaveRequest;
+use App\Services\Employee\LeaveRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class LeaveRequestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $leaveRequestService;
+    protected $base_route = 'employee.leave-requests';
+    protected $panel_name = 'Leave Request';
+
+    public function __construct(LeaveRequestService $leaveRequestService)
+    {
+        $this->leaveRequestService = $leaveRequestService;
+    }
+
+
     public function index(Request $request)
     {
-        $status = $request->status;
-        $leaveRequests = LeaveRequest::when($status !== 'all',
-            function ($query) use ($status) {
-                if (in_array($status, ['pending', 'approved', 'rejected'])) {
-                    $query->where('status', $status);
-                }
-            }
-        )
-        ->where('user_id', auth()->id())
-        ->latest()
-        ->paginate(10);
-        return view('employee.leave_requests.index', compact('leaveRequests'));
+        $leaveRequests = $this->leaveRequestService->getUserLeaveRequests(auth()->id(), $request->status);
+        return view($this->base_route.'.index', compact('leaveRequests'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
-{
-    return view('employee.leave_requests.create');
-}
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
     {
-        $data = $request->validate([
-            'leave_type' => 'required|string|max:255',
-            'custom_leave_type' => 'nullable|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'required|string',
-        ]);
-
-        $data['leave_type'] = $data['leave_type'] === 'other' ? $data['custom_leave_type'] : $data['leave_type'];
-        unset($data['custom_leave_type']);
-        $data['user_id'] = auth()->id();
-        LeaveRequest::create($data);
-
-        return redirect()->route('employee.leave-requests.index')->with('success', 'Leave request submitted.');
+        return view($this->base_route.'.create');
     }
-    /**
-     * Display the specified resource.
-     */
+
+
+    public function store(StoreLeaveRequest $request)
+    {
+        $this->leaveRequestService->store($request->validated());
+        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Submitted.');
+    }
+
+
     public function show(string $id)
     {
-        //
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(LeaveRequest $leaveRequest)
     {
         $this->authorize('update', $leaveRequest);
-
-        return view('employee.leave_requests.edit',['leaveRequest' => $leaveRequest]);
+        return view($this->base_route.'.edit', ['leaveRequest' => $leaveRequest]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-   public function update(Request $request, LeaveRequest $leaveRequest)
+
+    public function update(UpdateLeaveRequest $request, LeaveRequest $leaveRequest)
     {
-
         $this->authorize('update', $leaveRequest);
-
-         $data = $request->validate([
-            'leave_type' => 'required|string|max:255',
-            'custom_leave_type' => 'nullable|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'required|string',
-        ]);
-
-        $data['leave_type'] = $data['leave_type'] === 'other' ? $data['custom_leave_type'] : $data['leave_type'];
-        unset($data['custom_leave_type']);
-            $data['user_id'] = auth()->id();
-            LeaveRequest::create($data);
-
-        return redirect()->route('employee.leave-requests.index')->with('success', 'Leave request updated.');
-
+        $this->leaveRequestService->update($leaveRequest, $request->validated());
+        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
 
     public function destroy(LeaveRequest $leaveRequest)
     {
         try {
             $this->authorize('delete', $leaveRequest);
-
-            $leaveRequest->delete();
-
-            return redirect()
-                ->route('employee.leave-requests.index')
-                ->with('success', 'Leave request deleted successfully.');
+            $this->leaveRequestService->destroy($leaveRequest);
+            return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Deleted.');
         } catch (AuthorizationException $e) {
-            return redirect()
-                ->route('employee.leave-requests.index')
-                ->with('error', $e->getMessage()); // shows custom policy message
+            return redirect()->route($this->base_route.'.index')->with('error', $e->getMessage());
         }
+    }
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        $this->leaveRequestService->updateStatus($id, $request->validated());
+        return back()->with('success', $this->panel_name.' status Update.');
     }
 
 }

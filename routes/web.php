@@ -1,23 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\LeaveRequestController as EmployeeLeaveRequestController;
 use App\Http\Controllers\Admin\LeaveRequestController as AdminLeaveRequestController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AdminLoginController;
-use App\Http\Controllers\HomeController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// Landing page
 Route::view('/', 'welcome');
 
-// Laravel default auth for employees
-Auth::routes();
+// default auth
+
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
 
 // Custom admin login
 Route::prefix('admin')->group(function () {
@@ -38,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->prefix('admin')->as('admin.')->group(function () {
         Route::get('leave-requests/export/csv', [AdminLeaveRequestController::class, 'exportCsv'])->name('leave-requests.export.csv');
         Route::post('leave-requests/{id}/status', [AdminLeaveRequestController::class, 'updateStatus'])->name('leave-requests.status');
+        Route::resource('users', UserController::class);
         Route::resource('leave-requests', AdminLeaveRequestController::class);
     });
 
@@ -47,5 +46,3 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Laravel default home route
-Route::get('/home', [HomeController::class, 'index'])->name('home');

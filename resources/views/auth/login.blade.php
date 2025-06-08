@@ -2,67 +2,39 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Log in</title>
-    <link rel="stylesheet" href="{{ asset('design/plugins/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('design/dist/css/adminlte.min.css') }}">
-    <!-- Toastr CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Login</title>
+    <link href="{{ asset('design/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('design/plugins/toastr/toastr.css') }}">
-
 </head>
 
-<body class="hold-transition login-page">
-    @include('employee.layouts.flash_message')
-    <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card">
-            <div class="card-body login-card-body">
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
-                <p class="login-box-msg">Employee Login Page</p>
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+        <h3 class="text-center mb-4">Employee Login</h3>
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
 
-                <form action="{{ route('login') }}" method="post">
-                    @csrf
-                    <div class="input-group mb-3">
-                        <input name="email" type="email" class="form-control" placeholder="Email">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input name="password" type="password" class="form-control" placeholder="Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                        </div>
-                    </div>
-                </form>
-
-                <p class="mb-1">
-                    <a href="forgot-password.html">I forgot my password</a>
-                </p>
-                <p class="mb-0">
-                    <a href="register.html" class="text-center">Register a new membership</a>
-                </p>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" name="email" id="email" class="form-control" required autofocus>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                <label class="form-check-label" for="remember">Remember Me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+        </form>
     </div>
+
     <script src="{{ asset('design/plugins/jquery/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('design/plugins/toastr/toastr.min.js') }}"></script>
     <script>
@@ -74,22 +46,18 @@
         toastr.error("{{ session('error') }}");
         @endif
 
-        @if($errors-> any())
+        @if($errors->any())
         toastr.error("{{ $errors->first() }}");
         @endif
 
-    </script>
-
-    <script>
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "positionClass": "toast-top-right", // or "toast-bottom-left"
+            "positionClass": "toast-top-right",
             "timeOut": "3000"
         };
 
     </script>
-
 </body>
 
 </html>

@@ -11,7 +11,8 @@
 
 @section('content')
     <div class="container">
-        <h3>Welcome Admin Leave Stats</h3>
+        <h3 class="text-center">Welcome User: ({{ auth()->user()->name }}) - ({{ auth()->user()->email }}) </h3>
+        <h3 class="text-center">Your Leave Stats</h3>
         <div class="row mb-4">
             <div class="col">
                 <div class="card bg-info text-white">
@@ -19,8 +20,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Charts Side by Side --}}
 
         <div class="row">
             <div class="col-md-6">
@@ -55,6 +54,7 @@
     const leaveTypeLabels = {!! json_encode(array_keys($leaveCountsByType->toArray())) !!};
     const leaveTypeData = {!! json_encode(array_values($leaveCountsByType->toArray())) !!};
 
+    // random color generate
     function generateColors(count) {
         const colors = [];
         for (let i = 0; i < count; i++) {

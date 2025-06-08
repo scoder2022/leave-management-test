@@ -3,112 +3,77 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\LeaveStatusChanged;
+use App\Http\Requests\Admin\StoreLeaveRequest;
 use App\Models\LeaveRequest;
+use App\Services\Admin\LeaveRequestService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class LeaveRequestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $leaveRequestService;
+
+    protected $base_route = 'admin.leave-requests';
+    protected $panel_name = 'Leave Request';
+
+    public function __construct(LeaveRequestService $leaveRequestService)
+    {
+        $this->leaveRequestService = $leaveRequestService;
+    }
+
+
     public function index(Request $request)
     {
-        $query = LeaveRequest::with('user')->latest();
-
-        // Optional filter by status
-        if ($request->has('status') && in_array($request->status, ['pending', 'approved', 'rejected'])) {
-            $query->where('status', $request->status);
-        }
-
-        $leaveRequests = $query->paginate(10);
-
-        return view('admin.leave_requests.index', compact('leaveRequests'));
+        $leaveRequests = $this->leaveRequestService->listLeaveRequests($request);
+        return view($this->base_route.'.index', compact('leaveRequests'));
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+    public function store(StoreLeaveRequest $request)
     {
-        $data = $request->validate([
-            'leave_type' => 'required|string|max:255',
-            'custom_leave_type' => 'nullable|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'required|string',
-        ]);
+        $this->leaveRequestService->createLeaveRequest($request->validated());
 
-        $data['leave_type'] = $data['leave_type'] === 'other' ? $data['custom_leave_type'] : $data['leave_type'];
-        unset($data['custom_leave_type']);
-            $data['user_id'] = auth()->id();
-            LeaveRequest::create($data);
-
-        return redirect()->route('admin.leave-requests.index')->with('success', 'Leave request submitted.');
+        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Submitted.');
     }
-    /**
-     * Display the specified resource.
-     */
+
+
     public function show(LeaveRequest $leaveRequest)
     {
-        return view('admin.leave_requests.show',compact('leaveRequest'));
+        return view($this->base_route.'.show',compact('leaveRequest'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(LeaveRequest $leaveRequest)
     {
-        return view('admin.leave_requests.edit',compact('leaveRequest'));
+        return view($this->base_route.'.edit',compact('leaveRequest'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
    public function update(Request $request, LeaveRequest $leaveRequest)
     {
-
         $this->authorize('update', $leaveRequest);
 
-        $validated = $request->validate([
-            'leave_type' => 'required|string',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'required|string|max:1000',
-        ]);
+        $this->leaveRequestService->updateLeaveRequest($leaveRequest, $request->validate());
 
-        $leaveRequest->update($validated);
-
-        return redirect()->route('admin.leave-requests.index')->with('success', 'Leave request updated.');
+        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(LeaveRequest $leaveRequest)
     {
         try {
-            $leaveRequest->delete();
-            return redirect()
-                ->route('admin.leave-requests.index')
-                ->with('success', 'Leave request deleted successfully.');
+            $this->leaveRequestService->deleteLeaveRequest($leaveRequest);
+            return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Deleted Successfully.');
         } catch (\Exception $e) {
-            return redirect()
-                ->route('admin.leave-requests.index')
-                ->with('error', $e->getMessage()); // shows custom policy message
+            return redirect()->route($this->base_route.'.index')->with('error', $e->getMessage());
         }
     }
+
 
     public function updateStatus(Request $request, $id)
     {
@@ -118,46 +83,16 @@ class LeaveRequestController extends Controller
         ]);
 
         $leaveRequest = LeaveRequest::with('user')->findOrFail($id);
-        $leaveRequest->update($validated);
 
-        Mail::to($leaveRequest->user->email)->send(new LeaveStatusChanged($leaveRequest));
-        return redirect()->route('admin.leave-requests.index')->with('success', 'Leave status updated.');
+        $this->leaveRequestService->updateStatus($leaveRequest, $validated);
+
+        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Status updated.');
     }
 
 
     public function exportCsv()
     {
-        $fileName = 'leave_requests_' . now()->format('Ymd_His') . '.csv';
-        $leaveRequests = LeaveRequest::with('user')->get();
-
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename={$fileName}",
-        ];
-
-        $columns = ['ID', 'Employee', 'Type', 'Start Date', 'End Date', 'Status', 'Reason', 'Comment'];
-
-        $callback = function () use ($leaveRequests, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-
-            foreach ($leaveRequests as $leave) {
-                fputcsv($file, [
-                    $leave->id,
-                    $leave->user->name ?? 'N/A',
-                    $leave->leave_type,
-                    $leave->start_date,
-                    $leave->end_date,
-                    $leave->status,
-                    $leave->reason,
-                    $leave->admin_comment,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return $this->leaveRequestService->exportToCsv();
     }
 
 }

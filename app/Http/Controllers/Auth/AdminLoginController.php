@@ -16,13 +16,14 @@ class AdminLoginController extends Controller
         return view('auth.admin-login');
     }
 
+    
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             if (Auth::user()->role !== 'admin') {
                 Auth::logout();
-                return redirect()->back()->with('error', 'Login Error.');
+                return redirect()->back()->with('error', 'Login Error. Invalid Access.');
             }
             return redirect('/admin/dashboard');
         }
