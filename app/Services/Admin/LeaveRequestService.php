@@ -22,12 +22,6 @@ class LeaveRequestService
     }
 
 
-    public function updateLeaveRequest(LeaveRequest $leaveRequest, array $data)
-    {
-        return $leaveRequest->update($data);
-    }
-
-
     public function deleteLeaveRequest(LeaveRequest $leaveRequest)
     {
         return $leaveRequest->delete();

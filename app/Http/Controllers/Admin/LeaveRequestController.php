@@ -52,13 +52,9 @@ class LeaveRequestController extends Controller
     }
 
 
-   public function update(Request $request, LeaveRequest $leaveRequest)
+   public function update(Request $request,LeaveRequest $leaveRequest)
     {
-        $this->authorize('update', $leaveRequest);
 
-        $this->leaveRequestService->updateLeaveRequest($leaveRequest, $request->validate());
-
-        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Updated.');
     }
 
 
