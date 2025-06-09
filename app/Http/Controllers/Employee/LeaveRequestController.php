@@ -74,11 +74,4 @@ class LeaveRequestController extends Controller
         }
     }
 
-
-    public function updateStatus(Request $request, $id)
-    {
-        $this->leaveRequestService->updateStatus($id, $request->validated());
-        return back()->with('success', $this->panel_name.' status Update.');
-    }
-
 }

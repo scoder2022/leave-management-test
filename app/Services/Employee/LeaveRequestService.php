@@ -45,11 +45,4 @@ class LeaveRequestService
     {
         $leaveRequest->delete();
     }
-
-
-    public function updateStatus($id, array $data)
-    {
-        $leaveRequest = LeaveRequest::findOrFail($id);
-        $leaveRequest->update($data);
-    }
 }

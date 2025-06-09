@@ -6,7 +6,6 @@ use App\Mail\LeaveStatusChanged;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Response;
 
 class LeaveRequestService
 {
