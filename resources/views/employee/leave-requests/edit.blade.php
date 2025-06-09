@@ -37,15 +37,18 @@
                    value="{{ !in_array($leaveRequest->leave_type, ['casual','sick','earned','maternity','paternity','unpaid']) ? $leaveRequest->leave_type : '' }}">
         </div>
 
-        <div class="form-group mt-3">
-            <label>Start Date</label>
-            <input type="date" name="start_date" class="form-control" value="{{ $leaveRequest->start_date }}" required>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label>Start Date</label>
+                <input type="date" name="start_date" value="{{ $leaveRequest->start_date }}" class="form-control" required>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>End Date</label>
+                <input type="date" name="end_date" value="{{ $leaveRequest->end_date }}" class="form-control" required>
+            </div>
         </div>
 
-        <div class="form-group mt-2">
-            <label>End Date</label>
-            <input type="date" name="end_date" class="form-control" value="{{ $leaveRequest->end_date }}" required>
-        </div>
 
         <div class="form-group mt-2">
             <label>Reason</label>

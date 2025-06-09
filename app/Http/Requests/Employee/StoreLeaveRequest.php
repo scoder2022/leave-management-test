@@ -24,7 +24,7 @@ class StoreLeaveRequest extends FormRequest
         return [
             'leave_type' => 'required|string|max:255',
             'custom_leave_type' => 'nullable|string|max:255',
-            'start_date' => 'required|date',
+            'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'required|string',
         ];
