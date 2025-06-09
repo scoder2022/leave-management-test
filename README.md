@@ -14,6 +14,7 @@ A simplified HR workflow system with:
 -   Submit leave requests
 -   View and filter request history
 -   Receive email alerts when approved or rejected
+-   Edit or delete leave requests while status is pending
 
 ### Admin Panel
 
