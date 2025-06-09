@@ -61,6 +61,7 @@
                                 class="d-flex gap-2 align-items-center">
                                 @csrf
                                 <select name="status" class="form-select form-select-sm w-auto">
+                                    <option selected disabled>Select Leave Status</option>
                                     <option value="approved" @selected($leave_request->status == 'approved')>Approve</option>
                                     <option value="rejected" @selected($leave_request->status == 'rejected')>Reject</option>
 
