@@ -24,7 +24,8 @@ A simplified HR workflow system with:
 
 ## Bonus Features Added
 
--   📧 Email notifications on status update
+-   📧 Email notifications on status update  
+    (Implemented using Laravel Notifications. You can test emails using Mailtrap or switch to the `log` driver to view emails in `storage/logs/laravel.log`.)
 -   📊 Charts showing leaves per month and type (Chart.js)
 -   📄 Export leave data to CSV using native `fputcsv()`
 
