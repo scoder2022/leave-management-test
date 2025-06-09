@@ -34,11 +34,9 @@ class LeaveRequestController extends Controller
     }
 
 
-    public function store(StoreLeaveRequest $request)
+    public function store()
     {
-        $this->leaveRequestService->createLeaveRequest($request->validated());
 
-        return redirect()->route($this->base_route.'.index')->with('success', $this->panel_name.' Submitted.');
     }
 
 
@@ -79,7 +77,7 @@ class LeaveRequestController extends Controller
     {
         $validated = $request->validate([
             'status' => 'required|in:approved,rejected',
-            'admin_comment' => 'nullable|string',
+            'admin_comment' => 'required|string',
         ]);
 
         $leaveRequest = LeaveRequest::with('user')->findOrFail($id);

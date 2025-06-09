@@ -10,6 +10,17 @@
     <form method="POST" action="{{ route('admin.users.update', $user->id) }}">
         @csrf
         @method('PUT')
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <input type="hidden" name="id" value="{{$user->id}}">
 
         <div class="form-group">

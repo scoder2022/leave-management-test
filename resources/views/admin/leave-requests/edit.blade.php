@@ -16,6 +16,17 @@
 
     <form method="POST" action="{{ route('admin.leave-requests.status', $leaveRequest->id) }}">
         @csrf
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <label for="leave_type">Leave Type</label>
         <select name="leave_type" id="leave_type" class="form-control" required disabled>
             <option value="">-- Select Leave Type --</option>

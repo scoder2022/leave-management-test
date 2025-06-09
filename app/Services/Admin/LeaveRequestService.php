@@ -22,16 +22,6 @@ class LeaveRequestService
     }
 
 
-    public function createLeaveRequest(array $data)
-    {
-        $data['leave_type'] = $data['leave_type'] === 'other' ? $data['custom_leave_type'] : $data['leave_type'];
-        unset($data['custom_leave_type']);
-        $data['user_id'] = auth()->id();
-
-        return LeaveRequest::create($data);
-    }
-
-
     public function updateLeaveRequest(LeaveRequest $leaveRequest, array $data)
     {
         return $leaveRequest->update($data);

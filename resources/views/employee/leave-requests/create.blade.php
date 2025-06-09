@@ -5,6 +5,15 @@
     <h2>New Leave Request</h2>
 
     <form method="POST" action="{{ route('employee.leave-requests.store') }}">
+         @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         @csrf
         <!-- Leave Type Dropdown -->
         <label for="leave_type">Leave Type</label>
