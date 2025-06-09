@@ -51,7 +51,7 @@ A simplified HR workflow system with:
 
 ## Default Login Credentials
 
-### Admin
+### Admin Login
 
 -   Email: `admin@admin.com`
 -   Password: `admin@admin.com`
