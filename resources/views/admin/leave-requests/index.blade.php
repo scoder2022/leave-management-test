@@ -72,9 +72,9 @@
                             </form>
                         </div>
 
-                        <a href="{{ route('admin.leave-requests.show', $leave_request->id) }}" title="Show/Edit"
+                        <a href="{{ route('admin.leave-requests.show', $leave_request->id) }}" title="Show Detail/Edit"
                             class="btn btn-sm btn-info mt-4">
-                            <i class="fa fa-eye"></i> Show
+                            <i class="fa fa-eye"></i> Show Detail
                         </a>
                         <form action="{{ route('admin.leave-requests.destroy', $leave_request->id) }}" method="POST"
                             onsubmit="return confirm('Are you sure to delete this request?')" class="d-inline">
