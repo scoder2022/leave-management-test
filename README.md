@@ -54,8 +54,3 @@ A simplified HR workflow system with:
 
 -   Email: `admin@admin.com`
 -   Password: `admin@admin.com`
-
-### Employee
-
--   Email: `user@user.com`
--   Password: `user@user.com`

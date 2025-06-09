@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2>New Leave Request</h2>
+    <h2>Add New Employee</h2>
 
     <form method="POST" action="{{ route('admin.users.store') }}">
         @csrf

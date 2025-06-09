@@ -28,8 +28,21 @@
     <div class="card">
         <h3 class="mb-4">Welcome to Leave Management System</h3>
         <div class="d-flex justify-content-center">
-            <a href="{{ route('login') }}" class="btn btn-primary mr-3">Login as Employee</a>
-            <a href="{{ route('admin.login') }}" class="btn btn-success">Login as Admin </a>
+
+
+            @if(auth()->check())
+                @if(auth()->user()->role == 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-primary mr-3">Admin Dashboard</a>
+                @else
+                <a href="{{ route('employee.dashboard') }}" class="btn btn-primary mr-3">Employee Dashboard</a>
+                @endif
+
+            @else
+                <a href="{{ route('login') }}" class="btn btn-primary mr-3">Login as Employee</a>
+                <a href="{{ route('admin.login') }}" class="btn btn-success">Login as Admin </a>
+            @endif
+
+
         </div>
     </div>
 </body>
